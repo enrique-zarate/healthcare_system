@@ -15,22 +15,18 @@
           <thead>
             <tr>
               <th class="px-4 py-2">Nombre</th>
-              <th class="px-4 py-2">Apellido</th>
-              <th class="px-4 py-2">Edad</th>
-              <th class="px-4 py-2">Sexo</th>
-              <th class="px-4 py-2">Fecha de nacimiento</th>
-              <th class="px-4 py-2">Fecha de ingreso</th>
-              <th class="px-4 py-2">Fecha de alta</th>
-              <th class="px-4 py-2">Estado</th>
+              <th class="px-4 py-2">Fecha de Nacimiento</th>
+              <th class="px-4 py-2">Últimos Signos Vitales</th>
             </tr>
           </thead>
           <tbody>
             {% for patient in patients %}
             <tr>
-              <td class="border px-4 py-2">{{ patient.name }}</td>
-              <td class="border px-4 py-2">{{ patient.surname }}</td>
-              <td class="border px-4 py-2">{{ patient.age }}</td>
+              <td class="border px-4 py-2">{{ patient.nombre }}</td>
+              <td class="border px-4 py-2">{{ patient.fecha_nacimiento }}</td>
+              <td class="border px-4 py-2">{{ patient.signos_vitales }}</td>
             </tr>
+            {% endfor %}
           </tbody>
         </table>
       </section>
