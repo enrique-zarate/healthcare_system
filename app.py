@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
 # import sqlalchemy
 from flask_sqlalchemy import SQLAlchemy
 # import pycopg2-binary
@@ -7,6 +7,7 @@ import psycopg2
 from models import Paciente
 # import os
 import os
+
 
 # crear la aplicacion
 app = Flask(__name__)
@@ -101,3 +102,28 @@ def patient(id):
     # print(row)
     conn.close()
     return render_template('patient.html', patient=row)
+
+# endpoint to create a new patient
+@app.route('/patients/new', methods=['GET', 'POST'])
+def new_patient():
+    # create a connection to the database and the user data
+    conn = psycopg2.connect(
+        host="localhost",
+        database="flask_db",
+        user=os.environ['DB_USERNAME'],
+        password=os.environ['DB_PASSWORD'])
+
+    # obtener los datos del formulario
+    print(request.form)
+    nombre = request.form['nombre']
+    fecha_nacimiento = request.form['fecha_nacimiento']
+    signos_vitales = request.form['signos_vitales']
+    
+    # create a cursor
+    cur = conn.cursor()
+    # query de insercion de datos
+    cur.execute("INSERT INTO patients (nombre, fecha_nacimiento, signos_vitales) VALUES (%s, %s, %s)",
+                                      (nombre, fecha_nacimiento, signos_vitales))
+    conn.commit()
+    conn.close()
+    return render_template('new_patient.html')

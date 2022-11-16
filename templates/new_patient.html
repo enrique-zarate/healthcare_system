@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Listado de pacientes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <main>
+      <section>
+        <!-- form to create new patient -->
+        <h1 class="text-2xl font-bold">Nuevo paciente</h1>
+        <!-- Form para la carga de datos del paciente: nombre, fecha de nacimiento y signos vitales -->
+        <form action="/patients/new" method="POST">
+          <label for="nombre">Nombre</label>
+          <input
+            type="text"
+            name="nombre"
+            id="nombre"
+            class="border-2 border-gray-300 p-2 rounded-lg"
+          />
+          <label for="fecha_nacimiento">Fecha de Nacimiento</label>
+          <input
+            type="date"
+            name="fecha_nacimiento"
+            id="fecha_nacimiento"
+            class="border-2 border-gray-300 p-2 rounded-lg"
+          />
+          <label for="ritmo_cardiaco">Signos Vitales</label>
+          <input
+            type="number"
+            name="signos_vitales"
+            id="signos_vitales"
+            class="border-2 border-gray-300 p-2 rounded-lg"
+          />
+          <button
+            type="submit"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Crear
+          </button>
+      </section>
+    </main>
+  </body>
+</html>
