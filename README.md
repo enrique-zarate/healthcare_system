@@ -8,9 +8,6 @@ Proyecto de gestión de registros médicos
 
 pip install -r requirements.txt
 
-### Run the server
-
-$ flask run
 
 ## Config the database
 
@@ -25,3 +22,11 @@ give permissions to user
 ### create table
 
 python3 init_db.py
+
+### set user, password database enviroment variables for flask app
+export 
+
+
+### Run the server
+
+$ flask run
