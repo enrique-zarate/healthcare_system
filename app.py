@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request
 # import sqlalchemy
 from flask_sqlalchemy import SQLAlchemy
 # import pycopg2-binary
@@ -7,7 +7,10 @@ import psycopg2
 from models import Paciente
 # import os
 import os
-
+# importar dotenv
+from dotenv import load_dotenv
+# cargar las variables de entorno
+load_dotenv()
 
 # crear la aplicacion
 app = Flask(__name__)
@@ -26,40 +29,12 @@ db.init_app(app)
 conn = psycopg2.connect(
         host="localhost",
         database="flask_db",
-        user=os.environ['DB_USERNAME'],
-        password=os.environ['DB_PASSWORD'])
+        user=os.getenv("DB_USERNAME"),
+        password=os.getenv("DB_PASSWORD"))
         
-
-
-# # crear una conexion a la base de datos postgres
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost:5432/flask_db'
-# # desactivar el track de modificaciones
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# # inicializar la base de datos
-# db.init_app(app)
-
-# def connection():
-#     s = 'localhost:5432/flask_db' #Your server(host) name 
-#     d = 'patients' #Your database name
-#     u = 'enri' #Your login user
-#     p = 'kike2311' #Your login password
-#     conn = psycopg2.connect(host=s, user=u, password=p, database=d)
-#     return conn
-    
-# conn = connection()
-
-
-
-# # create postgres tables
-# @app.before_first_request
-# def create_tables():
-#     db.create_all()
-
 @app.route('/')
 def index():
     return {'Saludo' : 'Hola Mundo'}
-
-
 
 # crear ruta para mostrar los pacientes
 @app.route('/patients')
@@ -106,24 +81,19 @@ def patient(id):
 # endpoint to create a new patient
 @app.route('/patients/new', methods=['GET', 'POST'])
 def new_patient():
-    # create a connection to the database and the user data
-    conn = psycopg2.connect(
-        host="localhost",
-        database="flask_db",
-        user=os.environ['DB_USERNAME'],
-        password=os.environ['DB_PASSWORD'])
+    if request.method == 'POST':
+        print(request.form)
+        # obtener los datos del formulario
+        nombre = request.form['nombre']
+        fecha_nacimiento = request.form['fecha_nacimiento']
+        signos_vitales = request.form['signos_vitales']
+        # crear objeto Paciente
+        paciente = Paciente(nombre, fecha_nacimiento, signos_vitales)
+        # insertar objeto paciente en la base de datos
+        db.session.add(paciente)
+        # guardar los cambios
+        db.session.commit()
 
-    # obtener los datos del formulario
-    print(request.form)
-    nombre = request.form['nombre']
-    fecha_nacimiento = request.form['fecha_nacimiento']
-    signos_vitales = request.form['signos_vitales']
+        return 'Paciente creado'
     
-    # create a cursor
-    cur = conn.cursor()
-    # query de insercion de datos
-    cur.execute("INSERT INTO patients (nombre, fecha_nacimiento, signos_vitales) VALUES (%s, %s, %s)",
-                                      (nombre, fecha_nacimiento, signos_vitales))
-    conn.commit()
-    conn.close()
     return render_template('new_patient.html')

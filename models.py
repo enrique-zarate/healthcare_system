@@ -14,8 +14,8 @@ class Paciente(db.Model):
     signos_vitales = db.Column(db.String(80), unique=False, nullable=False)
 
     # constructor
-    def __init__(self, id, nombre, fecha_nacimiento, signos_vitales):
-        self.id = id
+    def __init__(self, nombre, fecha_nacimiento, signos_vitales):
+        # self.id = id
         self.nombre = nombre
         self.fecha_nacimiento = fecha_nacimiento
         self.signos_vitales = signos_vitales

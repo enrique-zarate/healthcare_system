@@ -8,7 +8,6 @@ Proyecto de gestión de registros médicos
 
 pip install -r requirements.txt
 
-
 ## Config the database
 
 install postgres
@@ -24,9 +23,24 @@ give permissions to user
 python3 init_db.py
 
 ### set user, password database enviroment variables for flask app
-export 
 
+export FLASK_APP=<python file name>
+
+### debug mode
+
+export FLASK_ENV=development
+export FLASK_DEBUG=true
 
 ### Run the server
 
-$ flask run
+$ flask run $
+
+### postgres engine
+
+sudo service postgresql status for checking the status of your database.
+sudo service postgresql start to start running your database.
+sudo service postgresql stop to stop running your database
+
+### run postgres in terminal
+
+sudo -u postgres psql
