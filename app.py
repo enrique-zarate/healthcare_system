@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 # import sqlalchemy
 from flask_sqlalchemy import SQLAlchemy
 # import pycopg2-binary
@@ -33,27 +33,9 @@ def index():
 @app.route('/patients')
 def patients():
     # obtener los pacientes de la base de datos
-    pacientes = Paciente.query.all()
+    patients = db.session.query(Paciente).all()
     # renderizar la plantilla
-    return render_template('patients.html', pacientes=pacientes)
-
-# create an endpoint to edit a patient
-@app.route('/patients/<int:id>' , methods=['GET', 'POST'])
-def patient(id):
-    # get data from html form
-    if request.method == 'POST':
-        # get data from html form
-        name = request.form['name']
-        birth_date = request.form['birth_date']
-        vital_signs = request.form['vital_signs']
-        # create a connection to the database and the user data
-        paciente = Paciente.query.get(id)
-        paciente.name = name
-        paciente.birth_date = birth_date
-        paciente.vital_signs = vital_signs
-        db.session.commit()
-        return render_template('patient.html', patient=paciente)
-    return render_template('patient.html', patient=Paciente.query.get(id))
+    return render_template('patients_list.html', patients=patients)
 
 # endpoint to create a new patient
 @app.route('/patients/new', methods=['GET', 'POST'])
@@ -71,21 +53,31 @@ def new_patient():
         # guardar los cambios
         db.session.commit()
 
-        return 'Paciente creado'
+        return redirect(url_for('patients'))
     
     return render_template('new_patient.html')
 
 # endpoint to edit a patient
 @app.route('/patients/edit/<int:id>', methods=['GET', 'POST'])
 def edit_patient(id):
-    db.session.query(Paciente).filter(Paciente.id == id).update(request.form)
-    db.session.commit()
-    return 'Paciente actualizado'
+    # get data from html form
+    if request.method == 'POST':
+        # get data from html form
+        nombre = request.form['nombre']
+        fecha_nacimiento = request.form['fecha_nacimiento']
+        signos_vitales = request.form['signos_vitales']
+        # create a connection to the database and the user data
+        patient = db.session.query(Paciente).filter_by(id=id).first()
+        patient.nombre = nombre
+        patient.fecha_nacimiento = fecha_nacimiento
+        patient.signos_vitales = signos_vitales
+        db.session.commit()
+        return redirect(url_for('patients'))
+    return render_template('patient.html', patient=db.session.query(Paciente).get(id))
+
 
 # endpoint to search a patient
-@app.route('/patients/search/<string:name>')
-def search_patient(name):
-    # obtener el paciente de la base de datos
-    paciente = Paciente.query.filter_by(name=name).first()
-    # renderizar la plantilla
-    return render_template('patient.html', patient=paciente)
+@app.route('/patients/search/<string:nombre>')
+def search_patient(nombre):
+    patients = db.session.query(Paciente).filter(Paciente.nombre == nombre).all()
+    return render_template('patients_list.html', patients=patients)

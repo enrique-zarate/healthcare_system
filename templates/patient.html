@@ -10,46 +10,56 @@
   <body>
     <main>
       <section>
-        <!-- desplegar datos del paciente -->
-        <h1 class="text-2xl font-bold">Datos del paciente</h1>
-        <table class="table-auto">
-          <thead>
-            <tr>
-              <th class="px-4 py-2">Nombre</th>
-              <th class="px-4 py-2">Fecha de Nacimiento</th>
-              <th class="px-4 py-2">Últimos Signos Vitales</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- display the data of one patient in the body of the talbe and make each field an input -->
-            <tr>
-              <td class="border px-4 py-2">
-                <input
-                  type="text"
-                  class="w-full"
-                  value="{{ patient.name }}"
-                  name="name"
-                />
-              </td>
-              <td class="border px-4 py-2">
-                <input
-                  type="date"
-                  class="w-full"
-                  value="{{ patient.birthdate }}"
-                  name="birthdate"
-                />
-              </td>
-              <td class="border px-4 py-2">
-                <input
-                  type="text"
-                  class="w-full"
-                  value="{{ patient.last_signs }}"
-                  name="last_signs"
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <form action="/patients/edit/{{ patient.id }}" method="POST">
+          <input type="hidden" name="id" value="{{ patient.id }}" />
+          <!-- desplegar datos del paciente -->
+          <h1 class="text-2xl font-bold">Datos del paciente</h1>
+          <table class="table-auto">
+            <thead>
+              <tr>
+                <th class="px-4 py-2">Nombre</th>
+                <th class="px-4 py-2">Fecha de Nacimiento</th>
+                <th class="px-4 py-2">Últimos Signos Vitales</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- display the data of one patient in the body of the talbe and make each field an input -->
+              <tr>
+                <td class="border px-4 py-2">
+                  <input
+                    type="text"
+                    class="w-full"
+                    value="{{ patient.nombre }}"
+                    name="nombre"
+                  />
+                </td>
+                <td class="border px-4 py-2">
+                  <input
+                    type="date"
+                    class="w-full"
+                    value="{{ patient.fecha_nacimiento }}"
+                    name="fecha_nacimiento"
+                  />
+                </td>
+                <td class="border px-4 py-2">
+                  <input
+                    type="text"
+                    class="w-full"
+                    value="{{ patient.signos_vitales }}"
+                    name="signos_vitales"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!--  button for subbmiting data to /patients/edit -->
+          <button
+            type="submit"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Guardar
+          </button>
+        </form>
       </section>
     </main>
   </body>
