@@ -21,12 +21,32 @@
             </tr>
           </thead>
           <tbody>
-            <!-- display the data of one patient in the body of the talbe -->
-
+            <!-- display the data of one patient in the body of the talbe and make each field an input -->
             <tr>
-              <td class="border px-4 py-2">{{ patient[1] }}</td>
-              <td class="border px-4 py-2">{{ patient[2] }}</td>
-              <td class="border px-4 py-2">{{ patient[3] }}</td>
+              <td class="border px-4 py-2">
+                <input
+                  type="text"
+                  class="w-full"
+                  value="{{ patient.name }}"
+                  name="name"
+                />
+              </td>
+              <td class="border px-4 py-2">
+                <input
+                  type="date"
+                  class="w-full"
+                  value="{{ patient.birthdate }}"
+                  name="birthdate"
+                />
+              </td>
+              <td class="border px-4 py-2">
+                <input
+                  type="text"
+                  class="w-full"
+                  value="{{ patient.last_signs }}"
+                  name="last_signs"
+                />
+              </td>
             </tr>
           </tbody>
         </table>

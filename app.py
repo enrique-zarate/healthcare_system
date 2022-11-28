@@ -25,58 +25,35 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 db.init_app(app)
 
-# create object connection
-conn = psycopg2.connect(
-        host="localhost",
-        database="flask_db",
-        user=os.getenv("DB_USERNAME"),
-        password=os.getenv("DB_PASSWORD"))
-        
 @app.route('/')
 def index():
-    return {'Saludo' : 'Hola Mundo'}
+    return '<h2>Hola Mundo</h2>'
 
 # crear ruta para mostrar los pacientes
 @app.route('/patients')
 def patients():
-    # create a connection to the database and the user data
-    conn = psycopg2.connect(
-        host="localhost",
-        database="flask_db",
-        user=os.environ['DB_USERNAME'],
-        password=os.environ['DB_PASSWORD'])
-    # crear una lista de pacientes
-    patients = []
-    # crear conexion a la base de datos y los datos del usuario
-    # conn = psycopg2.connect("dbname=flask_db user=enri")
-    # crear cursor
-    cur = conn.cursor()
-    # ejecutar query
-    cur.execute("SELECT * FROM patients")
-    # fetch de los datos a la tabla
-    for row in cur.fetchall():
-        patients.append({"id": row[0], "nombre": row[1], "fecha_nacimiento": row[2], "signos_vitales": row[3]})
-    conn.close()
-    return render_template('patients_list.html', patients=patients)
+    # obtener los pacientes de la base de datos
+    pacientes = Paciente.query.all()
+    # renderizar la plantilla
+    return render_template('patients.html', pacientes=pacientes)
 
-    # create an endpoint to edit a patient
+# create an endpoint to edit a patient
 @app.route('/patients/<int:id>' , methods=['GET', 'POST'])
 def patient(id):
-    # create a connection to the database and the user data
-    conn = psycopg2.connect(
-        host="localhost",
-        database="flask_db",
-        user=os.environ['DB_USERNAME'],
-        password=os.environ['DB_PASSWORD'])
-    # create a cursor
-    cur = conn.cursor()
-    # execute query
-    cur.execute("SELECT * FROM patients WHERE id=%s", (id,))
-    # fetch the data from the table
-    row = cur.fetchone()
-    # print(row)
-    conn.close()
-    return render_template('patient.html', patient=row)
+    # get data from html form
+    if request.method == 'POST':
+        # get data from html form
+        name = request.form['name']
+        birth_date = request.form['birth_date']
+        vital_signs = request.form['vital_signs']
+        # create a connection to the database and the user data
+        paciente = Paciente.query.get(id)
+        paciente.name = name
+        paciente.birth_date = birth_date
+        paciente.vital_signs = vital_signs
+        db.session.commit()
+        return render_template('patient.html', patient=paciente)
+    return render_template('patient.html', patient=Paciente.query.get(id))
 
 # endpoint to create a new patient
 @app.route('/patients/new', methods=['GET', 'POST'])
@@ -97,3 +74,18 @@ def new_patient():
         return 'Paciente creado'
     
     return render_template('new_patient.html')
+
+# endpoint to edit a patient
+@app.route('/patients/edit/<int:id>', methods=['GET', 'POST'])
+def edit_patient(id):
+    db.session.query(Paciente).filter(Paciente.id == id).update(request.form)
+    db.session.commit()
+    return 'Paciente actualizado'
+
+# endpoint to search a patient
+@app.route('/patients/search/<string:name>')
+def search_patient(name):
+    # obtener el paciente de la base de datos
+    paciente = Paciente.query.filter_by(name=name).first()
+    # renderizar la plantilla
+    return render_template('patient.html', patient=paciente)
