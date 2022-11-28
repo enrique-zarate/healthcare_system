@@ -17,15 +17,7 @@ cur.execute('''CREATE TABLE patients (id serial PRIMARY KEY,
                                         fecha_nacimiento VARCHAR(80) NOT NULL, 
                                         signos_vitales VARCHAR(80) NOT NULL
                                         );''')
-# cur.execute('CREATE TABLE books (id serial PRIMARY KEY,'
-#                                  'title varchar (150) NOT NULL,'
-#                                  'author varchar (50) NOT NULL,'
-#                                  'pages_num integer NOT NULL,'
-#                                  'review text,'
-#                                  'date_added date DEFAULT CURRENT_TIMESTAMP);'
-#                                  )
 
-# Insert data into the table
 
 cur.execute('INSERT INTO patients (nombre, fecha_nacimiento, signos_vitales)'
             'VALUES (%s, %s, %s);', 
