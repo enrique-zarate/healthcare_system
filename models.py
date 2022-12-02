@@ -24,3 +24,22 @@ class Paciente(db.Model):
     def __repr__(self):
         return f'Paciente {self.nombre}'
 
+# crear una clase registro de presiones, con los datos de id de paciente (FK de la clase anterior), fecha de la toma, y signos vitales
+class RegistroPresion(db.Model):
+    
+        __tablename__ = "pressure_records"
+    
+        id = db.Column(db.Integer, primary_key=True)
+        id_paciente = db.Column(db.Integer, db.ForeignKey('patients.id'), nullable=False)
+        fecha_toma = db.Column(db.String(80), unique=False, nullable=False)
+        signos_vitales = db.Column(db.String(80), unique=False, nullable=False)
+    
+        # constructor
+        def __init__(self, id_paciente, fecha_toma, signos_vitales):
+            self.id_paciente = id_paciente
+            self.fecha_toma = fecha_toma
+            self.signos_vitales = signos_vitales
+    
+        # representacion del objeto
+        def __repr__(self):
+            return f'Registro de presion {self.id_paciente}'

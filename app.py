@@ -18,7 +18,7 @@ app = Flask(__name__)
 # creamos objeto de base de datos
 
 # configurar la base de datos
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://enri:kike2311@localhost:5432/flask_db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
 # desactivar el track de modificaciones
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # inicializar la base de datos
@@ -52,7 +52,7 @@ def new_patient():
         db.session.add(paciente)
         # guardar los cambios
         db.session.commit()
-
+        # 
         return redirect(url_for('patients'))
     
     return render_template('new_patient.html')
@@ -77,7 +77,7 @@ def edit_patient(id):
 
 
 # endpoint to search a patient
-@app.route('/patients/search/<string:nombre>')
-def search_patient(nombre):
-    patients = db.session.query(Paciente).filter(Paciente.nombre == nombre).all()
+@app.route('/patients/search/<int:id>')
+def search_patient(id):
+    patients = db.session.query(Paciente).filter_by(id=id).first()
     return render_template('patients_list.html', patients=patients)
