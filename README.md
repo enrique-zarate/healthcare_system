@@ -18,7 +18,7 @@ create user and set password
 
 give permissions to user
 
-### create table
+### create tables and scheams
 
 python3 init_db.py
 
@@ -37,10 +37,16 @@ python3 init_db.py
 
 ### postgres engine
 
-1. Check service status: `sudo service postgresql`
-2. Start service: `sudo service postgresql`
-3. Stop service if needed: `sudo service postgresql`
+1. Check service status: `sudo service postgresql status`
+
+2. Start service: `sudo service postgresql start`
+
+3. Stop service if needed: `sudo service postgresql stop`
 
 ### run postgres in terminal
 
 `sudo -u postgres psql`
+
+### connect to db
+
+`\c flask_db`
