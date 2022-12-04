@@ -87,7 +87,29 @@
                           <a
                             href="/patients/edit/{{ patient.id }}"
                             class="text-indigo-600 hover:text-indigo-900"
-                            >Edit<span class="sr-only"
+                            >Editar paciente<span class="sr-only"
+                              >, {{ patient.id }}</span
+                            ></a
+                          >
+                          <span class="text-gray-300 px-3" aria-hidden="true"
+                            >|</span
+                          >
+                          <!-- anchor for adding a new registry to the patient -->
+                          <a
+                            href="/patients/{{ patient.id }}/signos_vitales/new"
+                            class="text-indigo-600 hover:text-indigo-900"
+                            >Agregar Signos Vitales<span class="sr-only"
+                              >, {{ patient.id }}</span
+                            >
+                          </a>
+                          <span class="text-gray-300 px-3" aria-hidden="true"
+                            >|</span
+                          >
+                          <!-- anchor for deleting a patient -->
+                          <a
+                            href="/patients/delete/{{ patient.id }}"
+                            class="text-indigo-600 hover:text-indigo-900"
+                            >Eliminar paciente<span class="sr-only"
                               >, {{ patient.id }}</span
                             ></a
                           >
