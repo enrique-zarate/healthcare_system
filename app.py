@@ -96,3 +96,11 @@ def new_signos_vitales(id):
 def search_patient(id):
     patients = db.session.query(Paciente).filter_by(id=id).first()
     return render_template('patients_list.html', patients=patients)
+
+# endpoint to delete a patient
+@app.route('/patients/delete/<int:id>')
+def delete_patient(id):
+    patient = db.session.query(Paciente).filter_by(id=id).first()
+    db.session.delete(patient)
+    db.session.commit()
+    return redirect(url_for('patients'))
