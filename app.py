@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 import psycopg2
 # importar los modelos de la base de datos
 from models import Paciente
+from models import SignoVital
 # import os
 import os
 # importar dotenv
@@ -75,6 +76,20 @@ def edit_patient(id):
         return redirect(url_for('patients'))
     return render_template('patient.html', patient=db.session.query(Paciente).get(id))
 
+# endpoint for adding a new registry to the patient
+@app.route('/patients/<int:id>/signos_vitales/new', methods=['GET', 'POST'])
+def new_signos_vitales(id):
+    if request.method == 'POST':
+        # get data from html form
+        id_paciente = id
+        signos_vitales = request.form['signo_vital']
+        fecha_toma = request.form['fecha_toma']
+        # create a connection to the database and the user data
+        vital_signs = SignoVital(id_paciente, fecha_toma, signos_vitales)
+        db.session.add(vital_signs)
+        db.session.commit()
+        return '<h2>Signos vitales agregados</h2>'
+    return render_template('signos_vitales.html', signos_vitales=db.session.query(SignoVital).filter_by(id_paciente=id).all())
 
 # endpoint to search a patient
 @app.route('/patients/search/<int:id>')

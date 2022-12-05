@@ -1,12 +1,15 @@
 import os
 import psycopg2
-import dotenv
+# importar dotenv
+from dotenv import load_dotenv
+
+load_dotenv()
 
 conn = psycopg2.connect(
         host="localhost",
         database="flask_db",
-        user=os.getenv("DB_USERNAME"),
-        password=os.getenv['DB_PASSWORD'])
+        user=os.getenv('DB_USERNAME'),
+        password=os.getenv('DB_PASSWORD'))
 
 # Open a cursor to perform database operations
 cur = conn.cursor()
@@ -28,13 +31,13 @@ cur.execute('INSERT INTO patients (nombre, fecha_nacimiento, signos_vitales)'
 # Execute a command: this creates a new table 'pressure_records' with a foreign key to 'patients'
 cur.execute('DROP TABLE IF EXISTS pressure_records;')
 cur.execute('''CREATE TABLE pressure_records(id serial PRIMARY KEY
-                ,FOREIGN KEY (id) REFERENCES patients (id)
+                ,id_paciente INTEGER NOT NULL
                 ,fecha_toma VARCHAR(80) NOT NULL
                 ,signos_vitales VARCHAR(80) NOT NULL);''')
 
 cur.execute('INSERT INTO pressure_records (id_paciente, fecha_toma, signos_vitales)'
                 'VALUES (%s, %s, %s);',
-                (1, '2020-01-01', '120/80')
+                (1, '2020-01-01', '120/69')
                 )
 
 conn.commit()
