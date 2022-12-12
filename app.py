@@ -92,10 +92,15 @@ def new_signos_vitales(id):
     return render_template('signos_vitales.html', signos_vitales=db.session.query(SignoVital).filter_by(id_paciente=id).all())
 
 # endpoint to search a patient
-@app.route('/patients/search/<int:id>')
-def search_patient(id):
-    patients = db.session.query(Paciente).filter_by(id=id).first()
-    return render_template('patients_list.html', patients=patients)
+@app.route('/patients/search', methods=['GET', 'POST'])
+def search_patient():
+    if request.method == 'POST':
+        # obtener id del form
+        id = request.form['id']
+        print(id)
+        patients = db.session.query(Paciente).filter_by(id=id).all()
+        return render_template('patients_list.html', patients=patients)
+
 
 # endpoint to delete a patient
 @app.route('/patients/delete/<int:id>')
@@ -104,3 +109,7 @@ def delete_patient(id):
     db.session.delete(patient)
     db.session.commit()
     return redirect(url_for('patients'))
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
