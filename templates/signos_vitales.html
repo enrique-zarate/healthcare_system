@@ -9,10 +9,16 @@
   </head>
   <body>
     <!-- mostrar los signos vitales del paciente -->
-    <h1>Signos Vitales</h1>
-    <p>ID del paciente: {{ signos_vitales.id_paciente }}</p>
-    <p>Ultima toma: {{ signos_vitales[0].signos_vitales }}</p>
-    <form action="/patients/{{ signos_vitales[0].id_paciente }}/signos_vitales/new" method="POST">
+    <div class="p-3">
+      <h1>Signos Vitales</h1>
+      <p class="text-xl">
+        ID del paciente: {{ signos_vitales[0].id_paciente }}
+      </p>
+    </div>
+    <form
+      action="/patients/{{ signos_vitales[0].id_paciente }}/signos_vitales/new"
+      method="POST"
+    >
       <div class="w-1/3 p-3">
         <div class="flex flex-col">
           <label for="signos_vitales">Signos Vitales</label>
@@ -38,7 +44,7 @@
       </div>
     </form>
     <!-- listado de signos vitales del paciente -->
-    <h1>Historial de Signos Vitales</h1>
+    <h1 class="pl-3">Historial de Signos Vitales</h1>
     <table class="table-auto">
       <thead>
         <tr>
@@ -54,5 +60,6 @@
         </tr>
         {% endfor %}
       </tbody>
+    </table>
   </body>
 </html>

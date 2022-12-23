@@ -46,14 +46,23 @@ def new_patient():
         # obtener los datos del formulario
         nombre = request.form['nombre']
         fecha_nacimiento = request.form['fecha_nacimiento']
-        signos_vitales = request.form['signos_vitales']
+        signos_vitales = request.form['signos_vitales']  # quitamos para que no se guarde en la tabla de pacientes, sino en la de registros
         # crear objeto Paciente
-        paciente = Paciente(nombre, fecha_nacimiento, signos_vitales)
+        paciente = Paciente(nombre, fecha_nacimiento)
         # insertar objeto paciente en la base de datos
         db.session.add(paciente)
         # guardar los cambios
         db.session.commit()
-        # 
+        # insertar entrada en la tabla de registros
+        # seleccionar el campo 'id' del ultimo paciente de la tabla pacientes
+        paciente_q = db.session.query(Paciente).order_by(Paciente.id.desc()).first()
+        # crear objeto SignoVital con el id del paciente creado en la linea anterior
+        signo_vital = SignoVital(paciente_q.id, '2020-01-01', signos_vitales)
+        
+        # insertar objeto signo vital en la base de datos
+        db.session.add(signo_vital)
+        # guardar los cambios
+        db.session.commit()
         return redirect(url_for('patients'))
     
     return render_template('new_patient.html')
@@ -66,18 +75,18 @@ def edit_patient(id):
         # get data from html form
         nombre = request.form['nombre']
         fecha_nacimiento = request.form['fecha_nacimiento']
-        signos_vitales = request.form['signos_vitales']
+        # signos_vitales = request.form['signos_vitales']
         # create a connection to the database and the user data
         patient = db.session.query(Paciente).filter_by(id=id).first()
         patient.nombre = nombre
         patient.fecha_nacimiento = fecha_nacimiento
-        patient.signos_vitales = signos_vitales
+        # patient.signos_vitales = signos_vitales
         db.session.commit()
         return redirect(url_for('patients'))
     return render_template('patient.html', patient=db.session.query(Paciente).get(id))
 
 # endpoint for adding a new registry to the patient
-@app.route('/patients/<int:id>/signos_vitales/new', methods=['GET', 'POST'])
+@app.route('/patients/<id>/signos_vitales/new', methods=['GET', 'POST'])
 def new_signos_vitales(id):
     if request.method == 'POST':
         # get data from html form
@@ -88,7 +97,7 @@ def new_signos_vitales(id):
         vital_signs = SignoVital(id_paciente, fecha_toma, signos_vitales)
         db.session.add(vital_signs)
         db.session.commit()
-        return '<h2>Signos vitales agregados</h2>'
+        return redirect(url_for('new_signos_vitales', id=id))
     return render_template('signos_vitales.html', signos_vitales=db.session.query(SignoVital).filter_by(id_paciente=id).all())
 
 # endpoint to search a patient

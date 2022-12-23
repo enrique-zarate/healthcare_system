@@ -1,33 +1,37 @@
 from flask_sqlalchemy import SQLAlchemy
+import os
+from dotenv import load_dotenv
 
-# objeto de la base de datos
+
 db = SQLAlchemy()
+
 
 # crear un modelo paciente, con los datos de nombre, fecha de nacimiento, signos vitales
 class Paciente(db.Model):
 
-    __tablename__ = "patients"
+    __tablename__ = "patients2"
 
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(80), unique=False, nullable=False)
     fecha_nacimiento = db.Column(db.String(80), unique=False, nullable=False)
-    signos_vitales = db.Column(db.String(80), unique=False, nullable=False)
+    # signos_vitales = db.Column(db.String(80), unique=False, nullable=False) se guarda en la tabla de registros
 
     # constructor
-    def __init__(self, nombre, fecha_nacimiento, signos_vitales):
+    def __init__(self, nombre, fecha_nacimiento):
         # self.id = id
         self.nombre = nombre
         self.fecha_nacimiento = fecha_nacimiento
-        self.signos_vitales = signos_vitales
+        # self.signos_vitales = signos_vitalesd
 
     # representacion del objeto
     def __repr__(self):
-        return f'Paciente {self.nombre}'
+        return f'Paciente {self.id}'
+
 
 # crear una clase registro de presiones, con los datos de id de paciente, fecha de la toma, y signos vitales
 class SignoVital(db.Model):
     
-        __tablename__ = "pressure_records"
+        __tablename__ = "pressure_records2"
     
         id = db.Column(db.Integer, primary_key=True)
         id_paciente = db.Column(db.Integer, unique=False, nullable=False)
@@ -42,4 +46,8 @@ class SignoVital(db.Model):
     
         # representacion del objeto
         def __repr__(self):
-            return f'Registro de presion {self.id_paciente}'
+            return f'Registro de presion {self.id}'
+
+
+
+# db.create_all()
